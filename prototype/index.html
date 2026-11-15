@@ -1,0 +1,128 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>360Browser</title>
+<style>
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    background: linear-gradient(135deg, #07152f, #0876b9);
+    color: white;
+    font-family: Arial, sans-serif;
+    min-height: 100vh;
+}
+
+header {
+    padding: 28px 7%;
+    background: #071329;
+    border-bottom: 3px solid #39b9ff;
+}
+
+.logo {
+    font-size: 32px;
+    font-weight: bold;
+}
+
+.logo span { color: #39b9ff; }
+
+main {
+    max-width: 900px;
+    margin: 65px auto;
+    padding: 25px;
+    text-align: center;
+}
+
+h1 { font-size: 38px; }
+
+.address {
+    display: flex;
+    gap: 10px;
+    margin: 35px 0;
+}
+
+input {
+    flex: 1;
+    min-width: 0;
+    padding: 17px;
+    border: 2px solid #58c7ff;
+    border-radius: 8px;
+    font-size: 16px;
+}
+
+button {
+    padding: 15px 25px;
+    border: 0;
+    border-radius: 8px;
+    background: #168bd1;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+button:hover { background: #36b5ff; }
+
+.panel {
+    background: #071c3dcc;
+    border: 1px solid #319bd8;
+    border-radius: 12px;
+    padding: 28px;
+    text-align: left;
+}
+
+footer {
+    text-align: center;
+    opacity: .7;
+    padding: 30px;
+}
+
+@media(max-width:600px) {
+    .address { flex-direction: column; }
+}
+</style>
+</head>
+<body>
+<header>
+    <div class="logo">360<span>Browser</span></div>
+</header>
+
+<main>
+    <h1>Explore a internet.</h1>
+    <p>Um navegador feito para o Xbox 360.</p>
+
+    <div class="address">
+        <input id="url" placeholder="Digite um endereço...">
+        <button onclick="openPage()">ACESSAR</button>
+    </div>
+
+    <section class="panel">
+        <h2>Bem-vindo ao 360Browser!</h2>
+        <p>Seu próximo destino está esperando.</p>
+        <p>🌐 Navegação leve</p>
+        <p>⭐ Favoritos</p>
+        <p>🕹️ Controle pelo Xbox 360</p>
+        <p id="status">Protótipo visual — versão 0.1</p>
+    </section>
+</main>
+
+<footer>360Browser • Projeto independente</footer>
+
+<script>
+function openPage() {
+    const url = document.getElementById("url").value.trim();
+    if (!url) {
+        document.getElementById("status").textContent =
+            "Digite um endereço primeiro!";
+        return;
+    }
+
+    document.getElementById("status").textContent =
+        "Endereço selecionado: " + url +
+        " — integração com o servidor ainda será adicionada.";
+}
+</script>
+</body>
+</html>
