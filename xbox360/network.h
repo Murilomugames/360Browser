@@ -2,7 +2,14 @@
 #ifndef NETWORK_H
 #define NETWORK_H
 
-int browser_network_init(void);
-void browser_network_shutdown(void);
+#include <stdint.h>
+
+/*
+ * Retorno:
+ *  1 = endereço IP disponível
+ *  0 = aguardando endereço IP
+ * -1 = erro
+ */
+int browser_network_check(uint32_t *ipv4);
 
 #endif
