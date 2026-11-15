@@ -1,17 +1,25 @@
 
 #include "network.h"
 
-/*
- * Inicialização de rede do 360Browser.
- * A implementação será adicionada após
- * confirmar as APIs disponíveis no XSDK.
- */
+#include <errno.h>
+#include <xsdk/net.h>
 
-int browser_network_init(void)
+int browser_network_check(uint32_t *ipv4)
 {
-    return 0;
-}
+    if (ipv4 == 0)
+        return -1;
 
-void browser_network_shutdown(void)
-{
+    struct in_addr address = {0};
+
+    int result = xsdk_net_address(&address);
+
+    if (result == 0) {
+        *ipv4 = address.s_addr;
+        return 1;
+    }
+
+    if (result == EAGAIN)
+        return 0;
+
+    return -1;
 }
