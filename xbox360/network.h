@@ -1,13 +1,12 @@
 
-
 #ifndef NETWORK_H
 #define NETWORK_H
 
 #include <stdint.h>
 
-// 1 = IP recebido
+// 1 = IP encontrado
 // 0 = aguardando IP
-// -1 = erro de rede
+// Outro valor = código de erro
 
 int browser_network_check(uint32_t *ipv4);
 
