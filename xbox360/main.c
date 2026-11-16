@@ -1,27 +1,64 @@
 
+#include <stdint.h>
+#include <arpa/inet.h>
+
+#include "xsdk/log.h"
+#include "xsdk/net.h"
+#include "xsdk/thread.h"
+
 #include "network.h"
 
-#include <errno.h>
-#include <xsdk/net.h>
-
-int browser_network_check(uint32_t *ipv4)
+int main(void)
 {
-    if (ipv4 == 0)
-        return -1;
+    uint32_t ipv4 = 0;
+    uint32_t link = 0;
 
-    struct in_addr address = {0};
+    xsdk_log_write("360Browser: iniciando teste de rede");
 
-    int result = xsdk_net_address(&address);
+    int link_result = xsdk_net_link(&link);
 
-    if (result == 0 && address.s_addr != 0)
+    xsdk_log_write(
+        "360Browser: link status=%d, bits=0x%02X",
+        link_result,
+        (unsigned)link
+    );
+
+    for (int attempt = 0; attempt < 15; attempt++)
     {
-        *ipv4 = address.s_addr;
-        return 1;
+        int result = browser_network_check(&ipv4);
+
+        if (result == 1)
+        {
+            struct in_addr address = {
+                .s_addr = ipv4
+            };
+
+            char ip[INET_ADDRSTRLEN];
+
+            if (inet_ntop(AF_INET, &address, ip, sizeof(ip)))
+                xsdk_log_write("360Browser: IP encontrado: %s", ip);
+
+            xsdk_log_write("360Browser: teste de rede concluido!");
+            return 0;
+        }
+
+        if (result == 0)
+        {
+            xsdk_log_write("360Browser: aguardando IP...");
+        }
+        else
+        {
+            xsdk_log_write(
+                "360Browser: erro de rede: %d",
+                result
+            );
+            return 1;
+        }
+
+        xsdk_thread_sleep(1000);
     }
 
-    if (result == EAGAIN)
-        return 0;
+    xsdk_log_write("360Browser: tempo esgotado aguardando IP");
 
-    return result;
+    return 0;
 }
-
