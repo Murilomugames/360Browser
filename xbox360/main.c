@@ -1,60 +1,27 @@
 
-#include <arpa/inet.h>
-#include <xsdk/log.h>
-#include <xsdk/thread.h>
-
 #include "network.h"
 
-int main(void)
+#include <errno.h>
+#include <xsdk/net.h>
+
+int browser_network_check(uint32_t *ipv4)
 {
-    uint32_t ipv4 = 0;
-    int last_result = -2;
+    if (ipv4 == 0)
+        return -1;
 
-    xsdk_log_write("360Browser: iniciando rede...");
+    struct in_addr address = {0};
 
-    while (1)
+    int result = xsdk_net_address(&address);
+
+    if (result == 0 && address.s_addr != 0)
     {
-        int result = browser_network_check(&ipv4);
-
-        if (result != last_result)
-        {
-            if (result == 1)
-            {
-                struct in_addr address = {
-                    .s_addr = ipv4
-                };
-
-                char ip[INET_ADDRSTRLEN];
-
-                if (inet_ntop(AF_INET, &address, ip, sizeof(ip)))
-                    xsdk_log_write("360Browser: IP recebido: %s", ip);
-                else
-                    xsdk_log_write("360Browser: IP recebido!");
-
-            }
-            else if (result == 0)
-            {
-                xsdk_log_write("360Browser: aguardando IP...");
-            }
-            else
-            {
-                xsdk_log_write("360Browser: erro ao iniciar rede");
-            }
-
-            last_result = result;
-        }
-
-        if (result == 1)
-            break;
-
-        xsdk_thread_sleep(1000);
+        *ipv4 = address.s_addr;
+        return 1;
     }
 
-    xsdk_log_write("360Browser: rede inicializada!");
+    if (result == EAGAIN)
+        return 0;
 
-    // Mantém o aplicativo aberto.
-    while (1)
-        xsdk_thread_sleep(1000);
-
-    return 0;
+    return result;
 }
+
